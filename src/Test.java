@@ -1,8 +1,19 @@
-
+import com.kennycason.kumo.CollisionMode;
+import com.kennycason.kumo.WordCloud;
+import com.kennycason.kumo.WordFrequency;
+import com.kennycason.kumo.bg.RectangleBackground;
+import com.kennycason.kumo.font.scale.LinearFontScalar;
+import com.kennycason.kumo.nlp.FrequencyAnalyzer;
+import com.kennycason.kumo.palette.ColorPalette;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
     public static void main(String args[]) throws Exception {
@@ -13,6 +24,7 @@ public class Test {
         // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
         //NB! seda faili ära giti pane, see info pole avalikkusele
 
+        //algne variant, kogu mant peameetodis
 //        twitter.setOAuthConsumer("", "");
 //        twitter.setOAuthAccessToken(new AccessToken("",  ""));
 
@@ -48,7 +60,7 @@ public class Test {
 //
 //        //salvestame faili
 //        java.io.File fail = new java.io.File("tweedid.txt");
-//        //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
+//        //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8"); //kirjutab faili üle
 //        java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true)); //kirjutab faili lõppu juurde
 //
 //        for (Tweet tweet : tweedid) {
@@ -82,13 +94,38 @@ public class Test {
         //klassidega
         System.out.println("Proovin klasssidega");
         Päring päring=new Päring();
-        päring.päring("Estonia", 200);
+        päring.päring("Estonia", 5);
         //System.out.println(päring.tweedid.toString());
         päring.salvestaFaili("tweedid.txt");
         ArrayList<Tweet> failistLoetud=päring.loeFailist("tweedid.txt");
+
+        System.out.println("Failist loeti "+failistLoetud.size()+" tweeti");
         //System.out.println(failistLoetud.toString());
-        System.out.println(failistLoetud.size());
-        System.out.println(failistLoetud.toString());
+
+        //salvestame tweedid sõnapilve jaoks faili
+        java.io.File failSonapilv = new java.io.File("sonapilv.txt");
+        java.io.PrintWriter pw = new java.io.PrintWriter(failSonapilv, "UTF-8"); //kirjutab faili üle
+
+        for (Tweet tweet : failistLoetud) {
+            pw.print(tweet.getTekst().replaceAll("[\n]",""));
+        }
+        pw.close();
+
+        //Sõnapilv
+        //http://kennycason.com/posts/2014-07-03-kumo-wordcloud.html
+        final FrequencyAnalyzer frequencyAnalyzer = new FrequencyAnalyzer();
+        File initialFile = new File("sonapilv.txt");
+        InputStream targetStream = new FileInputStream(initialFile);
+        //final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(getInputStream("sonapilv.txt"));
+        final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(targetStream);
+        final Dimension dimension = new Dimension(600, 600);
+        final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.RECTANGLE);
+        wordCloud.setPadding(0);
+        wordCloud.setBackground(new RectangleBackground(dimension));
+        wordCloud.setColorPalette(new ColorPalette(new Color(0xD5CFFA), new Color(0xBBB1FA), new Color(0x9A8CF5), new Color(0x806EF5)));
+        wordCloud.setFontScalar(new LinearFontScalar(10, 40));
+        wordCloud.build(wordFrequencies);
+        wordCloud.writeToFile("wordcloud_rectangle.png");
     }
 }
 

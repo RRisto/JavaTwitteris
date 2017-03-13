@@ -8,5 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.twitter4j:twitter4j-stream:4.0.4" level="project" />
+    <orderEntry type="library" name="edu.stanford.nlp:stanford-corenlp:3.7.0" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-nop:1.7.24" level="project" />
+    <orderEntry type="library" name="com.kennycason:kumo:1.8" level="project" />
   </component>
 </module>

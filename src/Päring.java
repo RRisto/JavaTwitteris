@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Päring {
 
     static ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
+    static ArrayList<Status> toorTweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
 
     Twitter twitter = TwitterFactory.getSingleton();
 
@@ -29,6 +30,7 @@ public class Päring {
                 for (Status tweet : tweets) {
                     //paneb vajaliku info kodukootud klassi
                     tweedid.add(new Tweet(tweet.getUser().getScreenName(), tweet.getText(), tweet.getId()));
+                    toorTweedid.add(tweet);
                     if (tweet.getId() < lastID) lastID = tweet.getId();
                 }
             } catch (TwitterException te) {
