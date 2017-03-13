@@ -1,10 +1,8 @@
-/**
- * Created by Risto on 13.03.2017.
- */
+
 public class Tweet {
-    String nimi;
-    String tekst;
-    Long statusId;
+    private String nimi;
+    private String tekst;
+    private Long statusId;
 
     public Tweet(String nimi, String tekst, Long statusId) {
         this.nimi = nimi;

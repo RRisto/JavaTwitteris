@@ -1,6 +1,3 @@
-/**
- * Created by Risto on 12.03.2017.
- */
 
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -9,17 +6,17 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class Test {
-    public static void main(String args[]) throws TwitterException, Exception {
+    public static void main(String args[]) throws Exception {
         ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
         Twitter twitter = TwitterFactory.getSingleton();
 
         twitter.setOAuthConsumer("", "");
-        twitter.setOAuthAccessToken(new AccessToken("",""));
+        twitter.setOAuthAccessToken(new AccessToken("",  ""));
 
         Query query = new Query("Estonia");
         int tweetideArv = 150;
         Long lastID = Long.MAX_VALUE;
-        ArrayList<Status> tweets = new ArrayList<Status>();//siia toorandmed JSONis
+        ArrayList<Status> tweets = new ArrayList<>();//siia toorandmed JSONis
         //pärib tweedid, max päringuga 100, kui jääb puudu otsib juurde tweete
         while (tweets.size() < tweetideArv) {
             if (tweetideArv - tweets.size() > 100) {
@@ -38,7 +35,7 @@ public class Test {
                 }
             } catch (TwitterException te) {
                 System.out.println("Ei suutnud ühenduda: " + te);
-            } ;
+            }
             query.setMaxId(lastID - 1);//muudab tweedi max id ära, et leida eelnevaid tweete
         }
 
