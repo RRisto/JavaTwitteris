@@ -1,7 +1,6 @@
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 import java.util.ArrayList;
 
@@ -9,9 +8,12 @@ public class Test {
     public static void main(String args[]) throws Exception {
         ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
         Twitter twitter = TwitterFactory.getSingleton();
+        //NB! selleks, et tööle hakkaks, tee fail twitter4j.properties ja salvesta kausta, kus
+        // on tweedid.txt fail.
+        // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
 
-        twitter.setOAuthConsumer("", "");
-        twitter.setOAuthAccessToken(new AccessToken("",  ""));
+//        twitter.setOAuthConsumer("", "");
+//        twitter.setOAuthAccessToken(new AccessToken("",  ""));
 
 //        Query query = new Query("Estonia");
 //        int tweetideArv = 150;
@@ -85,6 +87,7 @@ public class Test {
         ArrayList<Tweet> failistLoetud=päring.loeFailist("tweedid.txt");
         //System.out.println(failistLoetud.toString());
         System.out.println(failistLoetud.size());
+        System.out.println(failistLoetud.toString());
     }
 }
 
