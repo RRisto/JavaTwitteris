@@ -11,6 +11,7 @@ public class Test {
         //NB! selleks, et tööle hakkaks, tee fail twitter4j.properties ja salvesta kausta, kus
         // on tweedid.txt fail.
         // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
+        //NB! seda faili ära giti pane, see info pole avalikkusele
 
 //        twitter.setOAuthConsumer("", "");
 //        twitter.setOAuthAccessToken(new AccessToken("",  ""));
