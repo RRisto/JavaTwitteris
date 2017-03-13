@@ -10,9 +10,8 @@ public class Test {
         ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
         Twitter twitter = TwitterFactory.getSingleton();
 
-        twitter.setOAuthConsumer("C8Jpl39xJIVC6uw4zb6Rj809s", "VjTKEep9JMmrk8mezvSF3C4igtKkIWg2GObwuJ6TCWB8qsL6q4");
-        twitter.setOAuthAccessToken(new AccessToken("900293220-SQUIU1yGarUE1nrlcDXFz8MMFf9iIiVc0vnlwrGd",
-                "ZECsCbNvAW2ol8eYaHo1xssDnmW1qB40Z6ZJg1WQT5A5E"));
+        twitter.setOAuthConsumer("", "");
+        twitter.setOAuthAccessToken(new AccessToken("",  ""));
 
 //        Query query = new Query("Estonia");
 //        int tweetideArv = 150;
