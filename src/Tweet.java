@@ -14,7 +14,7 @@ public class Tweet {
 
     @Override
     public String toString() {
-        return "\nnimi: " + nimi + ",\n tekst: " + tekst;
+        return nimi + "; " + tekst+"; "+statusId+"\n";
     }
 
     public String getNimi() {
