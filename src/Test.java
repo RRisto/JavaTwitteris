@@ -94,13 +94,27 @@ public class Test {
         //klassidega
         System.out.println("Proovin klasssidega");
         Päring päring=new Päring();
-        päring.päring("Estonia", 5);
+        päring.päring("estonia", 5);
         //System.out.println(päring.tweedid.toString());
         päring.salvestaFaili("tweedid.txt");
         ArrayList<Tweet> failistLoetud=päring.loeFailist("tweedid.txt");
 
         System.out.println("Failist loeti "+failistLoetud.size()+" tweeti");
         //System.out.println(failistLoetud.toString());
+
+        System.out.println("Selline tweetide stringbuilder:");
+        Analüüs analüüs = new Analüüs();
+        StringBuilder sb = analüüs.tweet2SB(failistLoetud);
+        System.out.println(sb);
+
+        // eemaldame lingid
+
+        sb = analüüs.deleteHTTP(sb);
+        System.out.println(sb);
+
+        // proovime ainult hashtage eraldada
+        sb  = analüüs.hashTagsOnly(sb, "#Estonia");
+        System.out.println(sb);
 
         //salvestame tweedid sõnapilve jaoks faili
         java.io.File failSonapilv = new java.io.File("sonapilv.txt");
@@ -118,7 +132,7 @@ public class Test {
         InputStream targetStream = new FileInputStream(initialFile);
         //final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(getInputStream("sonapilv.txt"));
         final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(targetStream);
-        final Dimension dimension = new Dimension(600, 600);
+        final Dimension dimension = new Dimension(200, 200);
         final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.RECTANGLE);
         wordCloud.setPadding(0);
         wordCloud.setBackground(new RectangleBackground(dimension));
