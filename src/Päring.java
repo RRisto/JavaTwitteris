@@ -13,7 +13,7 @@ public class Päring {
 
     public ArrayList<Tweet> päring(String otsisõna, int tweetideArv) {
         Query query = new Query(otsisõna);
-        //int tweetideArv = 150;
+        // tweetideArv = 90;
         Long lastID = Long.MAX_VALUE;
         ArrayList<Status> tweets = new ArrayList<>();//siia toorandmed JSONis
         //pärib tweedid, max päringuga 100, kui jääb puudu otsib juurde tweete

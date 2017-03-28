@@ -29,8 +29,28 @@ public class Analüüs {
         return sb2;
     }
 
-    public StringBuilder hashTagsOnly(StringBuilder sb, String exclude) {
-        // String hashtagRegex = "^#\\w+|\\s#\\w+";
+    public String buildExcludeRegex(String exclude){
+        String [] excludeWords = exclude.split(" ");
+        StringBuilder sb = new StringBuilder();
+        sb.append("(?i)(");
+        for (String word : excludeWords) {
+            sb.append(word).append(" |");
+        }
+        sb.deleteCharAt(sb.length()-1).append(")");
+        return sb.toString();
+    }
+
+    public StringBuilder deleteExcludeWords(StringBuilder sb, String excludeRegex) {
+
+        StringBuilder sb2 = new StringBuilder();
+
+        String s = sb.toString().replaceAll(excludeRegex, "");
+        sb2.append(s);
+
+        return sb2;
+    }
+
+    public StringBuilder hashTagsOnly(StringBuilder sb) {
         String hashtagRegex = "\\B(\\#[a-zA-Z]+\\b)(?!;)"; //http://stackoverflow.com/questions/38506598/regular-expression-to-match-hashtag-but-not-hashtag-with-semicolon
         Pattern hashtagPattern = Pattern.compile(hashtagRegex);
         StringBuilder sb2 = new StringBuilder();
@@ -39,12 +59,10 @@ public class Analüüs {
 
         System.out.println("Algne sümbolite arv: " + sb.length());
 
-        while (m.find()) {
-            if (!(m.group(1).equals(exclude))) {
+      while (m.find()) {
                 System.out.println(m.group(1));
-                sb2.append(m.group(1) + " ");
+                sb2.append(m.group(1)).append(" ");
             }
-        }
 
         System.out.println("Sümboleid hashtagidena: " + sb2.length());
 

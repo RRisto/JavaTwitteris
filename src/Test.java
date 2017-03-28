@@ -26,6 +26,8 @@ public class Test {
         //NB! seda faili ära giti pane, see info pole avalikkusele
 
         Scanner sc = new Scanner(System.in);
+        Analüüs analüüs = new Analüüs();
+
         System.out.println("Sisesta sõna, mille järgi tweete otsida: ");
         String otsisõna = sc.nextLine();
 
@@ -55,20 +57,35 @@ public class Test {
             failistLoetud = päring.loeFailist(failiNimi);
             System.out.println("Failist " + failiNimi + " loeti " + failistLoetud.size() + " tweeti");
         }
+
+
+        // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
+
+        System.out.println("Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)");
+        String exclude = sc.nextLine() + " " + otsisõna;
         sc.close();
+        System.out.println("Välistan analüüsist: " + exclude);
+        String excludeRegex = analüüs.buildExcludeRegex(exclude);
+        System.out.println("excluderegex: " + excludeRegex);
 
 
         System.out.println("Selline tweetide stringbuilder:");
-        Analüüs analüüs = new Analüüs();
+
         StringBuilder sb = analüüs.tweet2SB(failistLoetud);
         System.out.println(sb);
 
         // eemaldame lingid
+        System.out.println("Peale linkide eemaldamist:");
         sb = analüüs.deleteHTTP(sb);
         System.out.println(sb);
 
+        // eemaldame välistatud sõnad
+        System.out.println("Peale välistatud sõnade eemaldamist:");
+        sb = analüüs.deleteExcludeWords(sb, excludeRegex);
+        System.out.println(sb);
+
         // proovime ainult hashtage eraldada
-        sb = analüüs.hashTagsOnly(sb, "#Estonia");
+        sb = analüüs.hashTagsOnly(sb);
         System.out.println(sb);
 
         //salvestame tweedid sõnapilve jaoks faili
