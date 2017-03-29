@@ -47,16 +47,17 @@ public class Test {
         System.out.println("Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
         String vastus = sc.nextLine();
         System.out.println(vastus);
-        System.out.println(!vastus.equalsIgnoreCase("jah\n"));
+        System.out.println(!vastus.equalsIgnoreCase("jah"));
 
-        while ((vastus.equalsIgnoreCase("ei\n")) || (vastus.equalsIgnoreCase("jah\n"))) {
+        while (!((vastus.equalsIgnoreCase("ei")) || (vastus.equalsIgnoreCase("jah")))) {
             System.out.println("Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
             vastus = sc.next();
         }
-        if (vastus.equalsIgnoreCase("jah\n")) {
+        if (vastus.equalsIgnoreCase("jah")) {
             failistLoetud = päring.loeFailist(failiNimi);
             System.out.println("Failist " + failiNimi + " loeti " + failistLoetud.size() + " tweeti");
         }
+
 
 
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
@@ -76,12 +77,19 @@ public class Test {
 
         // eemaldame lingid
         System.out.println("Peale linkide eemaldamist:");
-        sb = analüüs.deleteHTTP(sb);
+        String httpRegex = "(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?";
+        sb = analüüs.cleanText(sb, httpRegex, "");
+        System.out.println(sb);
+
+        // eemaldame kirjavahemärgid http://www.ocpsoft.org/tutorials/regular-expressions/java-visual-regex-tester/
+        System.out.println("Peale kirjavahemärkide eemaldamist:");
+        String punctuationRegex = "[-.,!?:]|'\\w";
+        sb = analüüs.cleanText(sb, punctuationRegex, " ");
         System.out.println(sb);
 
         // eemaldame välistatud sõnad
         System.out.println("Peale välistatud sõnade eemaldamist:");
-        sb = analüüs.deleteExcludeWords(sb, excludeRegex);
+        sb = analüüs.cleanText(sb, excludeRegex, "");
         System.out.println(sb);
 
         // proovime ainult hashtage eraldada

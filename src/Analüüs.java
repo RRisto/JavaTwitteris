@@ -15,36 +15,22 @@ public class Analüüs {
         return sb;
     }
 
-    public StringBuilder deleteHTTP(StringBuilder sb) {
-        String httpRegex = "(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?";
-        StringBuilder sb2 = new StringBuilder();
-
-        System.out.println("Algne sümbolite arv: " + sb.length());
-        // vastav regex on pärit siit http://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
-
-        String s = sb.toString().replaceAll(httpRegex,"");
-
-        sb2.append(s);
-        System.out.println("Sümboleid peale linkide eemaldamist: " + sb2.length());
-        return sb2;
-    }
-
     public String buildExcludeRegex(String exclude){
         String [] excludeWords = exclude.split(" ");
         StringBuilder sb = new StringBuilder();
-        sb.append("(?i)(");
+        sb.append("(?i)(\\b");
         for (String word : excludeWords) {
-            sb.append(word).append(" |");
+            sb.append(word).append("\\b|");
         }
         sb.deleteCharAt(sb.length()-1).append(")");
         return sb.toString();
     }
 
-    public StringBuilder deleteExcludeWords(StringBuilder sb, String excludeRegex) {
+    public StringBuilder cleanText(StringBuilder sb, String excludeRegex, String replaceRegex) {
 
         StringBuilder sb2 = new StringBuilder();
 
-        String s = sb.toString().replaceAll(excludeRegex, "");
+        String s = sb.toString().replaceAll(excludeRegex, replaceRegex);
         sb2.append(s);
 
         return sb2;
