@@ -8,6 +8,7 @@ import com.kennycason.kumo.palette.ColorPalette;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,15 +29,27 @@ public class Test {
         Scanner sc = new Scanner(System.in);
         Analüüs analüüs = new Analüüs();
 
-        System.out.println("Sisesta sõna, mille järgi tweete otsida: ");
-        String otsisõna = sc.nextLine();
+//        System.out.println("Sisesta sõna, mille järgi tweete otsida: ");
+//        String otsisõna = sc.nextLine();
 
-        System.out.println("Sisesta täisarv, mitu tweeti tahad pärida: ");
-        int tweetideArv = sc.nextInt();
-        sc.nextLine();
 
-        System.out.println("Sisesta failinimi, kuhu salvestada otsisõna '" + otsisõna + "' tulemused: ");
-        String failiNimi = sc.nextLine();
+        String otsisõna = JOptionPane.showInputDialog(null, "Sisesta sõna, mille järgi twitterist säutse otsida ", "Andmete sisestamine",
+                JOptionPane.QUESTION_MESSAGE);
+
+//        System.out.println("Sisesta täisarv, mitu tweeti tahad pärida: ");
+//        int tweetideArv = sc.nextInt();
+//        sc.nextLine();
+
+        String tweetideArvStr = JOptionPane.showInputDialog(null, "Sisesta täisarv, mitu tweeti tahad pärida: ", "Andmete sisestamine",
+                JOptionPane.QUESTION_MESSAGE);
+        int tweetideArv = Integer.parseInt(tweetideArvStr);
+
+//        System.out.println("Sisesta failinimi, kuhu salvestada otsisõna '" + otsisõna + "' tulemused: ");
+//        String failiNimi = sc.nextLine();
+
+        String failiNimi = JOptionPane.showInputDialog(null, "Sisesta failinimi, kuhu salvestada otsisõna " + otsisõna + " tulemused: ", "Andmete sisestamine",
+                JOptionPane.QUESTION_MESSAGE);
+
 
         Päring päring = new Päring();
         päring.päring(otsisõna, tweetideArv);
@@ -44,31 +57,35 @@ public class Test {
         päring.salvestaFaili(failiNimi);
 
         ArrayList<Tweet> failistLoetud = päring.tweedid;
-        System.out.println("Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
-        String vastus = sc.nextLine();
+//        System.out.println("Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
+//        String vastus = sc.nextLine();
+        String vastus = JOptionPane.showInputDialog(null, "Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)", "Andmete sisestamine",
+                JOptionPane.QUESTION_MESSAGE);
         System.out.println(vastus);
         System.out.println(!vastus.equalsIgnoreCase("jah"));
 
         while (!((vastus.equalsIgnoreCase("ei")) || (vastus.equalsIgnoreCase("jah")))) {
-            System.out.println("Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
-            vastus = sc.next();
+//            System.out.println("Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
+//            vastus = sc.next();
+            vastus = JOptionPane.showInputDialog(null, "Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)", "Andmete sisestamine",
+                    JOptionPane.QUESTION_MESSAGE);
         }
         if (vastus.equalsIgnoreCase("jah")) {
             failistLoetud = päring.loeFailist(failiNimi);
             System.out.println("Failist " + failiNimi + " loeti " + failistLoetud.size() + " tweeti");
+
         }
-
-
 
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
 
-        System.out.println("Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)");
-        String exclude = sc.nextLine() + " " + otsisõna;
-        sc.close();
+//        System.out.println("Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)");
+//        String exclude = sc.nextLine() + " " + otsisõna;
+//        sc.close();
+        String exclude = JOptionPane.showInputDialog(null, "Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)", "Välistused",
+                JOptionPane.QUESTION_MESSAGE);
         System.out.println("Välistan analüüsist: " + exclude);
         String excludeRegex = analüüs.buildExcludeRegex(exclude);
         System.out.println("excluderegex: " + excludeRegex);
-
 
         System.out.println("Selline tweetide stringbuilder:");
 
