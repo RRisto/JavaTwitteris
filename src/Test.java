@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -99,6 +100,8 @@ public class Test {
         System.out.println(sb);
 
         // eemaldame kirjavahemärgid http://www.ocpsoft.org/tutorials/regular-expressions/java-visual-regex-tester/
+        // praegu jääb sisse palju whitespace'i, ma ei tea, kas peaks veel eraldi topelttühikud ka eraldama?
+
         System.out.println("Peale kirjavahemärkide eemaldamist:");
         String punctuationRegex = "[-.,!?:]|'\\w";
         sb = analüüs.cleanText(sb, punctuationRegex, " ");
@@ -112,6 +115,11 @@ public class Test {
         // proovime ainult hashtage eraldada
         sb = analüüs.hashTagsOnly(sb);
         System.out.println(sb);
+
+        // teeme sagedustabeli hashtagidest (et oleks ülevaatlikum)
+        System.out.println("Sagedustabel:");
+        HashMap<String, Integer> frequencies = analüüs.wordFrequency(sb);
+        System.out.println(frequencies);
 
         //salvestame tweedid sõnapilve jaoks faili
         java.io.File failSonapilv = new java.io.File("sonapilv.txt");

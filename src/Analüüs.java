@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -54,4 +55,21 @@ public class Analüüs {
 
         return sb2;
     }
+
+    public HashMap<String, Integer> wordFrequency(StringBuilder sb){
+        HashMap<String,Integer> frequencies = new HashMap<String,Integer>();
+        String [] words = sb.toString().split(" ");
+
+        for (String word : words) {
+            Integer frequency = frequencies.get(word);
+            if (frequency == null) {
+                frequencies.put(word, 1);
+            } else {
+                frequencies.put(word, frequency + 1);
+            }
+        }
+
+        return frequencies;
+    }
+
 }
