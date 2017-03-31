@@ -1,88 +1,29 @@
-import com.kennycason.kumo.CollisionMode;
-import com.kennycason.kumo.WordCloud;
-import com.kennycason.kumo.WordFrequency;
-import com.kennycason.kumo.bg.RectangleBackground;
-import com.kennycason.kumo.font.scale.LinearFontScalar;
-import com.kennycason.kumo.nlp.FrequencyAnalyzer;
-import com.kennycason.kumo.palette.ColorPalette;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 
 public class Test {
     public static void main(String args[]) throws Exception {
-        ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
-        Twitter twitter = TwitterFactory.getSingleton();
         //NB! selleks, et tööle hakkaks, tee fail twitter4j.properties ja salvesta kausta, kus
         // on tweedid.txt fail.
         // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
         //NB! seda faili ära giti pane, see info pole avalikkusele
-
-        Scanner sc = new Scanner(System.in);
+        Päring päring = new Päring();
         Analüüs analüüs = new Analüüs();
 
-//        System.out.println("Sisesta sõna, mille järgi tweete otsida: ");
-//        String otsisõna = sc.nextLine();
+        päring.kysiOtsisõna("Sisesta sõna, mille järgi twitterist säutse otsida ", "Otsisõna");
+        päring.kysiTweetideArv("Sisesta täisarv, mitu tweeti tahad pärida: ", "Tweetide arv");
+        päring.kysiFailinimi("Sisesta failinimi, kuhu salvestada päringu '" + päring.getOtsisõna() + "' tulemused", "Failinimi");
 
-
-        String otsisõna = JOptionPane.showInputDialog(null, "Sisesta sõna, mille järgi twitterist säutse otsida ", "Andmete sisestamine",
-                JOptionPane.QUESTION_MESSAGE);
-
-//        System.out.println("Sisesta täisarv, mitu tweeti tahad pärida: ");
-//        int tweetideArv = sc.nextInt();
-//        sc.nextLine();
-
-        String tweetideArvStr = JOptionPane.showInputDialog(null, "Sisesta täisarv, mitu tweeti tahad pärida: ", "Andmete sisestamine",
-                JOptionPane.QUESTION_MESSAGE);
-        int tweetideArv = Integer.parseInt(tweetideArvStr);
-
-//        System.out.println("Sisesta failinimi, kuhu salvestada otsisõna '" + otsisõna + "' tulemused: ");
-//        String failiNimi = sc.nextLine();
-
-        String failiNimi = JOptionPane.showInputDialog(null, "Sisesta failinimi, kuhu salvestada otsisõna " + otsisõna + " tulemused: ", "Andmete sisestamine",
-                JOptionPane.QUESTION_MESSAGE);
-
-
-        Päring päring = new Päring();
-        päring.päring(otsisõna, tweetideArv);
-
-        päring.salvestaFaili(failiNimi);
-
-        ArrayList<Tweet> failistLoetud = päring.tweedid;
-//        System.out.println("Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
-//        String vastus = sc.nextLine();
-        String vastus = JOptionPane.showInputDialog(null, "Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)", "Andmete sisestamine",
-                JOptionPane.QUESTION_MESSAGE);
-        System.out.println(vastus);
-        System.out.println(!vastus.equalsIgnoreCase("jah"));
-
-        while (!((vastus.equalsIgnoreCase("ei")) || (vastus.equalsIgnoreCase("jah")))) {
-//            System.out.println("Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)");
-//            vastus = sc.next();
-            vastus = JOptionPane.showInputDialog(null, "Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + failiNimi + "? (jah/ei)", "Andmete sisestamine",
-                    JOptionPane.QUESTION_MESSAGE);
-        }
-        if (vastus.equalsIgnoreCase("jah")) {
-            failistLoetud = päring.loeFailist(failiNimi);
-            System.out.println("Failist " + failiNimi + " loeti " + failistLoetud.size() + " tweeti");
-
-        }
+        System.out.println("on olemas?" + päring.failOlemas());
+        päring.päring();
+        päring.salvestaFaili();
+        ArrayList<Tweet> failistLoetud = päring.kysiFailistLugemist();
 
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
-
-//        System.out.println("Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)");
-//        String exclude = sc.nextLine() + " " + otsisõna;
-//        sc.close();
-        String exclude = JOptionPane.showInputDialog(null, "Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)", "Välistused",
+        String exclude = JOptionPane.showInputDialog(null,
+                "Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)",
+                "Välistused",
                 JOptionPane.QUESTION_MESSAGE);
         System.out.println("Välistan analüüsist: " + exclude);
         String excludeRegex = analüüs.buildExcludeRegex(exclude);
@@ -101,7 +42,6 @@ public class Test {
 
         // eemaldame kirjavahemärgid http://www.ocpsoft.org/tutorials/regular-expressions/java-visual-regex-tester/
         // praegu jääb sisse palju whitespace'i, ma ei tea, kas peaks veel eraldi topelttühikud ka eraldama?
-
         System.out.println("Peale kirjavahemärkide eemaldamist:");
         String punctuationRegex = "[-.,!?:]|'\\w";
         sb = analüüs.cleanText(sb, punctuationRegex, " ");
@@ -121,34 +61,9 @@ public class Test {
         HashMap<String, Integer> frequencies = analüüs.wordFrequency(sb);
         System.out.println(frequencies);
 
-        //salvestame tweedid sõnapilve jaoks faili
-        java.io.File failSonapilv = new java.io.File("sonapilv.txt");
-        java.io.PrintWriter pw = new java.io.PrintWriter(failSonapilv, "UTF-8"); //kirjutab faili üle
-
-        for (
-                Tweet tweet : failistLoetud) {
-            pw.print(tweet.getTekst().replaceAll("[\n]", ""));
-        }
-        pw.close();
-
         //Sõnapilv
-        //http://kennycason.com/posts/2014-07-03-kumo-wordcloud.html
-        final FrequencyAnalyzer frequencyAnalyzer = new FrequencyAnalyzer();
-        File initialFile = new File("sonapilv.txt");
-        InputStream targetStream = new FileInputStream(initialFile);
-        //final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(getInputStream("sonapilv.txt"));
-        final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(targetStream);
-        final Dimension dimension = new Dimension(200, 200);
-        final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.RECTANGLE);
-        wordCloud.setPadding(0);
-        wordCloud.setBackground(new
+        Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
 
-                RectangleBackground(dimension));
-        wordCloud.setColorPalette(new ColorPalette(new Color(0xD5CFFA), new Color(0xBBB1FA), new
-                Color(0x9A8CF5), new Color(0x806EF5)));
-        wordCloud.setFontScalar(new LinearFontScalar(10, 40));
-        wordCloud.build(wordFrequencies);
-        wordCloud.writeToFile("wordcloud_rectangle.png");
     }
 }
 

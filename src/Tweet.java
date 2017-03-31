@@ -12,18 +12,19 @@ public class Tweet {
 
     @Override
     public String toString() {
-        return nimi + "; " + tekst+"; "+statusId+"\n";
+        return this.nimi + "; " + this.tekst+"; "+this.statusId+"\n";
     }
 
     public String getNimi() {
-        return nimi;
+        return this.nimi;
     }
 
     public String getTekst() {
-        return tekst;
+        return this.tekst;
     }
 
     public Long getStatusId() {
-        return statusId;
+        return this.statusId;
     }
+
 }
