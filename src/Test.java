@@ -61,6 +61,10 @@ public class Test {
         HashMap<String, Integer> frequencies = analüüs.wordFrequency(sb);
         System.out.println(frequencies);
 
+        // sagedustabel sorditud kujul (arraylist)
+        System.out.println("Sagedustabel, sorditud:");
+        System.out.println(analüüs.descFrequency(frequencies));
+
         //Sõnapilv
         Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
 

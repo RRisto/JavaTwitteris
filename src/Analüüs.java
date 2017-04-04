@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -70,6 +69,13 @@ public class Analüüs {
         }
 
         return frequencies;
+    }
+
+    public ArrayList<Map.Entry<String, Integer>> descFrequency(HashMap<String, Integer> frequencies) {
+        // meetod on laenatud siit http://stackoverflow.com/questions/26717422/converting-hashmap-to-sorted-arraylist
+        ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>(frequencies.entrySet());
+        sorted.sort(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getValue)));
+        return sorted;
     }
 
 }
