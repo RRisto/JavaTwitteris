@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Test {
     public static void main(String args[]) throws Exception {
@@ -65,6 +66,11 @@ public class Test {
         System.out.println("Sagedustabel, sorditud:");
         System.out.println(analüüs.descFrequency(frequencies));
 
+        System.out.println("Sõnad sageduse järjekorras");
+        ArrayList<Map.Entry<String, Integer>>  frequenciesOrg=analüüs.descFrequency(frequencies);
+        for (Map.Entry<String, Integer> stringIntegerEntry : frequenciesOrg) {
+            System.out.println(stringIntegerEntry);
+        }
         //Sõnapilv
         Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
 
