@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class Päring {
-    static ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
-    static ArrayList<Status> toorTweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
-    static String otsisõna;
-    static int tweetideArv;//tweetide arv, mida kasutaja tahaks päringuga saada
-    static String failinimi;
+    private ArrayList<Tweet> tweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
+    private ArrayList<Status> toorTweedid = new ArrayList<>();//kodukootud klass, lihtsam salvestada
+    private String otsisõna;
+    private int tweetideArv;//tweetide arv, mida kasutaja tahaks päringuga saada
+    private String failinimi;
 
     Twitter twitter = TwitterFactory.getSingleton();
 
@@ -25,7 +25,8 @@ public class Päring {
                 query.setCount(100);//korraga üle 100 ei saa
             } else {
                 query.setCount(this.tweetideArv - tweets.size());
-            } try { //try aitab exceptioneid kinni püüda
+            }
+            try { //try aitab exceptioneid kinni püüda
                 QueryResult result = twitter.search(query);
                 tweets.addAll(result.getTweets());
                 System.out.println("Kogusin " + tweets.size() + " tweeti");
@@ -51,10 +52,10 @@ public class Päring {
         java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true)); //kirjutab faili lõppu juurde
 
         for (Tweet tweet : tweedid) {
-            pw.print(tweet.getNimi().replaceAll("[\n]",""));//peab puhastama, muidu paneb faili tühje ridu, mis
+            pw.print(tweet.getNimi().replaceAll("[\n]", ""));//peab puhastama, muidu paneb faili tühje ridu, mis
             //sisselugemisel hakkab exceptioneid andma
             pw.print("; ");
-            pw.print(tweet.getTekst().replaceAll("[\n]",""));
+            pw.print(tweet.getTekst().replaceAll("[\n]", ""));
             pw.print("; ");
             pw.print(tweet.getStatusId());
             pw.print("\n");
@@ -63,50 +64,62 @@ public class Päring {
     }
 
     public ArrayList<Tweet> loeFailist() throws FileNotFoundException {
-        ArrayList<Tweet> sisseloetudtweedid=new ArrayList<>();
+        ArrayList<Tweet> sisseloetudtweedid = new ArrayList<>();
         java.io.File fail = new java.io.File(this.failinimi);
         java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
         while (sc.hasNextLine()) {
             String rida = sc.nextLine();
             String[] tükid = rida.split("; ");
             sisseloetudtweedid.add(new Tweet(tükid[0], tükid[1], Long.parseLong(tükid[2])));
-    }
-    return sisseloetudtweedid;
+        }
+        return sisseloetudtweedid;
     }
 
-    public boolean failOlemas(){
-        File fail=new File(this.failinimi);
+//    public void loeFailist() throws FileNotFoundException {
+//        java.io.File fail = new java.io.File(this.failinimi);
+//        java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
+//        while (sc.hasNextLine()) {
+//            String rida = sc.nextLine();
+//            String[] tükid = rida.split("; ");
+//            tweedid.add(new Tweet(tükid[0], tükid[1], Long.parseLong(tükid[2])));
+//        }
+//    }
+
+
+    public boolean failOlemas() {
+        File fail = new File(this.failinimi);
         return fail.exists();
     }
 
-    public void kysiOtsisõna(String tekst, String title){
-        String otsisõna=JOptionPane.showInputDialog(null, tekst, title,
+    public void kysiOtsisõna(String tekst, String title) {
+        String otsisõna = JOptionPane.showInputDialog(null, tekst, title,
                 JOptionPane.QUESTION_MESSAGE);
-        this.otsisõna=otsisõna;
+        this.otsisõna = otsisõna;
+        this.failinimi = otsisõna + ".txt";
     }
 
-    public void kysiTweetideArv(String tekst, String title){
-        int tweetideArv=Integer.parseInt(JOptionPane.showInputDialog(null, tekst, title,
+    public void kysiTweetideArv(String tekst, String title) {
+        int tweetideArv = Integer.parseInt(JOptionPane.showInputDialog(null, tekst, title,
                 JOptionPane.QUESTION_MESSAGE));
-        this.tweetideArv=tweetideArv;
+        this.tweetideArv = tweetideArv;
     }
 
-    public void kysiFailinimi(String tekst, String title){
-        String failinimi=JOptionPane.showInputDialog(null, tekst, title,
+    public void kysiFailinimi(String tekst, String title) {
+        String failinimi = JOptionPane.showInputDialog(null, tekst, title,
                 JOptionPane.QUESTION_MESSAGE);
-        this.failinimi=failinimi;
+        this.failinimi = failinimi;
     }
 
-    public static String getOtsisõna() {
-        return otsisõna;
+    public String getOtsisõna() {
+        return this.otsisõna;
     }
 
-    public static int getTweetideArv() {
-        return tweetideArv;
+    public int getTweetideArv() {
+        return this.tweetideArv;
     }
 
-    public static String getFailinimi() {
-        return failinimi;
+    public String getFailinimi() {
+        return this.failinimi;
     }
 
     public ArrayList<Tweet> kysiFailistLugemist() throws FileNotFoundException {
@@ -129,7 +142,16 @@ public class Päring {
     }
 
     public String getTekst() {
-        StringBuilder tekst =new StringBuilder();
+        StringBuilder tekst = new StringBuilder();
+        for (Tweet tweet : this.tweedid) {
+            tekst.append(tweet);
+            tekst.append(' ');
+        }
+        return tekst.toString();
+    }
+
+    public String getTekst(ArrayList<Tweet> tweedid) {
+        StringBuilder tekst = new StringBuilder();
         for (Tweet tweet : tweedid) {
             tekst.append(tweet);
             tekst.append(' ');

@@ -1,3 +1,10 @@
+import info.debatty.java.stringsimilarity.NGram;
+import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
+import net.ricecode.similarity.JaroWinklerStrategy;
+import net.ricecode.similarity.SimilarityStrategy;
+import net.ricecode.similarity.StringSimilarityService;
+import net.ricecode.similarity.StringSimilarityServiceImpl;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +21,9 @@ public class Test {
 
         päring.kysiOtsisõna("Sisesta sõna, mille järgi twitterist säutse otsida ", "Otsisõna");
         päring.kysiTweetideArv("Sisesta täisarv, mitu tweeti tahad pärida: ", "Tweetide arv");
-        päring.kysiFailinimi("Sisesta failinimi, kuhu salvestada päringu '" + päring.getOtsisõna() + "' tulemused", "Failinimi");
+//        päring.kysiFailinimi("Sisesta failinimi, kuhu salvestada päringu '" + päring.getOtsisõna() + "' tulemused", "Failinimi");
 
-        System.out.println("on olemas?" + päring.failOlemas());
+//        System.out.println("on olemas?" + päring.failOlemas());
         päring.päring();
         päring.salvestaFaili();
         ArrayList<Tweet> failistLoetud = päring.kysiFailistLugemist();
@@ -67,12 +74,41 @@ public class Test {
         System.out.println(analüüs.descFrequency(frequencies));
 
         System.out.println("Sõnad sageduse järjekorras");
-        ArrayList<Map.Entry<String, Integer>>  frequenciesOrg=analüüs.descFrequency(frequencies);
+        ArrayList<Map.Entry<String, Integer>> frequenciesOrg = analüüs.descFrequency(frequencies);
         for (Map.Entry<String, Integer> stringIntegerEntry : frequenciesOrg) {
             System.out.println(stringIntegerEntry);
         }
         //Sõnapilv
         Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
+
+        //sarnasuse arvutamine
+        String kysimus = JOptionPane.showInputDialog(null,
+                "Kas tahad arvutada tekstide sarnasust? (jah/ei)", "Tekstide sarnasus",
+                JOptionPane.QUESTION_MESSAGE);
+//        https://github.com/rrice/java-string-similarity
+        if (kysimus.equalsIgnoreCase("jah")) {
+            Päring päringTekst1 = new Päring();
+            päringTekst1.kysiFailinimi("Sisesta 1. faili nimi, mille tweete tahad võrrelda", "Tekstide sarnasus");
+            Päring päringTekst2 = new Päring();
+            päringTekst2.kysiFailinimi("Sisesta 2. faili nimi, mille tweete tahad võrrelda", "Tekstide sarnasus");
+            ArrayList<Tweet>tweedid1=päringTekst1.loeFailist();
+            ArrayList<Tweet>tweedid2=päringTekst2.loeFailist();
+
+            SimilarityStrategy strategy = new JaroWinklerStrategy();
+            StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+            String tekst1 = päringTekst1.getTekst(tweedid1);
+            String tekst2 = päringTekst2.getTekst(tweedid2);
+            double score = service.score(tekst1, tekst2);
+            System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() + " sarnasuse skoor on kasutades Jaro-Winkleri kaugust " + score);
+//            https://github.com/tdebatty/java-string-similarity#normalized-levenshtein
+            NormalizedLevenshtein l = new NormalizedLevenshtein();
+            System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() +
+                    " sarnasuse skoor on kasutades normaliseeritud Levenshteini kaugust " + l.distance(tekst1, tekst2));
+            NGram ngram = new NGram(4);
+            System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() +
+                    " sarnasuse skoor on kasutades ngrami "+ngram.distance(tekst1, tekst2));
+
+        }
 
     }
 }
