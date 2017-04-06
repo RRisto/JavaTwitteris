@@ -4,9 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Sven on 3/19/2017.
- */
+
 public class Analüüs {
 
     public String loadStopwords() throws FileNotFoundException {

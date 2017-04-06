@@ -24,17 +24,17 @@ public class Test {
         päring.kysiTweetideArv("Sisesta täisarv, mitu tweeti tahad pärida: ", "Tweetide arv");
 
         päring.päring();
-        //lküsime, kas loeme tweedid failist, kui oleme eelnevalt salvesttanud
+        //lküsime, kas loeme tweedid failist, kui oleme eelnevalt salvestanud
         ArrayList<Tweet> failistLoetud;
         File f = new File(päring.getFailinimi());
-        boolean failOlemas=f.exists() && !f.isDirectory();
+        boolean failEnneOlemas=f.exists() && !f.isDirectory();
         päring.salvestaFaili();
-        if (failOlemas) {
+
+        if (failEnneOlemas) {
             failistLoetud = päring.kysiFailistLugemist();
         } else {
             failistLoetud = päring.getTweedid();
         }
-
 
         Analüüs analüüs = new Analüüs();
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
@@ -43,10 +43,8 @@ public class Test {
                 "Välistused",
                 JOptionPane.QUESTION_MESSAGE) + " " + päring.getOtsisõna();
 
-
-
         päring.salvestaPuhasTekst(exclude);
-
+        //demonstreerime puhastamise meetodeid
         System.out.println("Välistan analüüsist: " + exclude);
         String excludeRegex = analüüs.buildExcludeRegex(exclude);
         System.out.println("excluderegex: " + excludeRegex);
@@ -97,7 +95,7 @@ public class Test {
             System.out.println(stringIntegerEntry);
         }
 
-        //sarnasuse arvutamine
+        //korpuste sarnasuse arvutamine
         int vastus = JOptionPane.showConfirmDialog(null,
                 "Kas tahad arvutada tekstide sarnasust (peab olema 2 salvestatud teksti)?",
                 "Tekstide sarnasus", JOptionPane.YES_OPTION);
