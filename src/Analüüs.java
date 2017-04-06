@@ -1,11 +1,24 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sven on 3/19/2017.
  */
 public class Analüüs {
+
+    public String loadStopwords() throws FileNotFoundException {
+        File file=new File("stopwords.txt");
+        Scanner sc=new Scanner(file, "UTF-8");
+        StringBuilder stopwords=new StringBuilder();
+        while (sc.hasNextLine()) {
+            stopwords.append(sc.nextLine());
+            stopwords.append(" ");
+        }
+        return stopwords.toString();
+    }
 
     public StringBuilder tweet2SB(ArrayList<Tweet> tweets){
         StringBuilder sb = new StringBuilder();

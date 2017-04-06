@@ -17,7 +17,7 @@ public class Päring {
 
     public ArrayList<Tweet> päring() {
         Query query = new Query(this.otsisõna);
-        Long lastID = Long.MAX_VALUE;
+        Long lastID = Long.MAX_VALUE;//viimase tweedi id, seda vaja, kui peame tegema mitu päringut, et tweetide arv täis saada
         ArrayList<Status> tweets = new ArrayList<>();//siia toorandmed JSONis
         //pärib tweedid, max päringuga 100, kui jääb puudu otsib juurde tweete
         while (tweets.size() < this.tweetideArv) {
@@ -37,7 +37,7 @@ public class Päring {
                     toorTweedid.add(tweet);
                     if (tweet.getId() < lastID) lastID = tweet.getId();
                 }
-            } catch (TwitterException te) {
+            } catch (TwitterException te) { //kui twitteri poolt tuleb mingi erind, püüab kinni
                 System.out.println("Ei suutnud ühenduda: " + te);
             }
             query.setMaxId(lastID - 1);//muudab tweedi max id ära, et leida eelnevaid tweete
@@ -55,7 +55,7 @@ public class Päring {
             pw.print(tweet.getNimi().replaceAll("[\n]", ""));//peab puhastama, muidu paneb faili tühje ridu, mis
             //sisselugemisel hakkab exceptioneid andma
             pw.print("; ");
-            pw.print(tweet.getTekst().replaceAll("[\n]", ""));
+            pw.print(tweet.getTekst().replaceAll("[\n]|;", ""));
             pw.print("; ");
             pw.print(tweet.getStatusId());
             pw.print("\n");
@@ -63,8 +63,31 @@ public class Päring {
         pw.close();
     }
 
+    public void setFailinimi(String failinimi) {
+        this.failinimi = failinimi;
+    }
+
+    public void salvestaPuhasTekst() throws FileNotFoundException {
+        java.io.File fail = new java.io.File(this.otsisõna+"_puhas.txt");
+        //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
+        java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true));
+        //puhastame teksti
+        Analüüs analüüs=new Analüüs();
+        StringBuilder sb = analüüs.tweet2SB(tweedid);
+        String httpRegex = "(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?";
+        sb = analüüs.cleanText(sb, httpRegex, "");
+        String punctuationRegex = "[-.,!?:]|'\\w";
+        sb = analüüs.cleanText(sb, punctuationRegex, " ");
+        String stopwords = analüüs.loadStopwords();
+        String excludeRegex = analüüs.buildExcludeRegex(stopwords);
+
+        sb = analüüs.cleanText(sb, excludeRegex, "");
+        pw.print(sb.toString());
+        pw.close();
+    }
+
     public ArrayList<Tweet> loeFailist() throws FileNotFoundException {
-        ArrayList<Tweet> sisseloetudtweedid = new ArrayList<>();
+        ArrayList<Tweet> sisseloetudtweedid =new ArrayList<>();
         java.io.File fail = new java.io.File(this.failinimi);
         java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
         while (sc.hasNextLine()) {
@@ -75,16 +98,27 @@ public class Päring {
         return sisseloetudtweedid;
     }
 
-//    public void loeFailist() throws FileNotFoundException {
-//        java.io.File fail = new java.io.File(this.failinimi);
-//        java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
-//        while (sc.hasNextLine()) {
-//            String rida = sc.nextLine();
-//            String[] tükid = rida.split("; ");
-//            tweedid.add(new Tweet(tükid[0], tükid[1], Long.parseLong(tükid[2])));
-//        }
-//    }
+    public String loePuhtastFailist() throws FileNotFoundException {
+        StringBuilder sisseloetudTekst=new StringBuilder();
+        java.io.File fail = new java.io.File(this.failinimi);
+        java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
+        while (sc.hasNextLine()) {
+            String rida = sc.nextLine();
+            sisseloetudTekst.append(rida);
+        }
+        return sisseloetudTekst.toString();
+    }
 
+    public String loePuhtastFailist(String failinimi) throws FileNotFoundException {
+        StringBuilder sisseloetudTekst=new StringBuilder();
+        java.io.File fail = new java.io.File(failinimi);
+        java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
+        while (sc.hasNextLine()) {
+            String rida = sc.nextLine();
+            sisseloetudTekst.append(rida);
+        }
+        return sisseloetudTekst.toString();
+    }
 
     public boolean failOlemas() {
         File fail = new File(this.failinimi);
@@ -122,19 +156,17 @@ public class Päring {
         return this.failinimi;
     }
 
+    public ArrayList<Tweet> getTweedid() {
+        return tweedid;
+    }
+
     public ArrayList<Tweet> kysiFailistLugemist() throws FileNotFoundException {
         ArrayList<Tweet> failistLoetud = this.tweedid;
-        String vastus = JOptionPane.showInputDialog(null,
+        int vastus = JOptionPane.showConfirmDialog(null,
                 "Kas loen eelnevalt salvestatud andmed failist '" + getFailinimi() + "'? (jah/ei)",
-                "Andmed failist", JOptionPane.QUESTION_MESSAGE);
+                "Andmed failist", JOptionPane.YES_OPTION);
 
-        while (!((vastus.equalsIgnoreCase("ei")) || (vastus.equalsIgnoreCase("jah")))) {
-            vastus = JOptionPane.showInputDialog(null,
-                    "Vale sisend. Kas loen eelnevalt salvestatud andmed failist " + getFailinimi() + "? (jah/ei)",
-                    "Andmete sisestamine",
-                    JOptionPane.QUESTION_MESSAGE);
-        }
-        if (vastus.equalsIgnoreCase("jah")) {
+        if (vastus == JOptionPane.YES_OPTION) {
             failistLoetud = loeFailist();
             System.out.println("Failist " + getFailinimi() + " loeti " + failistLoetud.size() + " tweeti");
         }

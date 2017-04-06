@@ -6,28 +6,37 @@ import net.ricecode.similarity.StringSimilarityService;
 import net.ricecode.similarity.StringSimilarityServiceImpl;
 
 import javax.swing.*;
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Test {
     public static void main(String args[]) throws Exception {
-        //NB! selleks, et tööle hakkaks, tee fail twitter4j.properties ja salvesta kausta, kus
-        // on tweedid.txt fail.
+        //NB! selleks, et tööle hakkaks tee fail twitter4j.properties ja salvesta juurkausta
         // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
         //NB! seda faili ära giti pane, see info pole avalikkusele
+
         Päring päring = new Päring();
-        Analüüs analüüs = new Analüüs();
 
         päring.kysiOtsisõna("Sisesta sõna, mille järgi twitterist säutse otsida ", "Otsisõna");
         päring.kysiTweetideArv("Sisesta täisarv, mitu tweeti tahad pärida: ", "Tweetide arv");
-//        päring.kysiFailinimi("Sisesta failinimi, kuhu salvestada päringu '" + päring.getOtsisõna() + "' tulemused", "Failinimi");
 
-//        System.out.println("on olemas?" + päring.failOlemas());
         päring.päring();
+        //lküsime, kas loeme tweedid failist, kui oleme eelnevalt salvesttanud
+        ArrayList<Tweet> failistLoetud;
+        File f = new File(päring.getFailinimi());
+        boolean failOlemas=f.exists() && !f.isDirectory();
         päring.salvestaFaili();
-        ArrayList<Tweet> failistLoetud = päring.kysiFailistLugemist();
+        if (failOlemas) {
+            failistLoetud = päring.kysiFailistLugemist();
+        } else {
+            failistLoetud = päring.getTweedid();
+        }
+        päring.salvestaPuhasTekst();
 
+        Analüüs analüüs = new Analüüs();
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
         String exclude = JOptionPane.showInputDialog(null,
                 "Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)",
@@ -60,6 +69,10 @@ public class Test {
         sb = analüüs.cleanText(sb, excludeRegex, "");
         System.out.println(sb);
 
+        //Sõnapilv
+//        Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
+        Sõnapilv.teeSõnapilv(päring.loePuhtastFailist(päring.getOtsisõna()+"_puhas.txt"), päring.getOtsisõna() + "_sõnapilv.png");
+
         // proovime ainult hashtage eraldada
         sb = analüüs.hashTagsOnly(sb);
         System.out.println(sb);
@@ -78,38 +91,37 @@ public class Test {
         for (Map.Entry<String, Integer> stringIntegerEntry : frequenciesOrg) {
             System.out.println(stringIntegerEntry);
         }
-        //Sõnapilv
-        Sõnapilv.teeSõnapilv(päring.getTekst(), päring.getFailinimi() + "_sõnapilv.png");
 
         //sarnasuse arvutamine
-        String kysimus = JOptionPane.showInputDialog(null,
-                "Kas tahad arvutada tekstide sarnasust? (jah/ei)", "Tekstide sarnasus",
-                JOptionPane.QUESTION_MESSAGE);
-//        https://github.com/rrice/java-string-similarity
-        if (kysimus.equalsIgnoreCase("jah")) {
-            Päring päringTekst1 = new Päring();
-            päringTekst1.kysiFailinimi("Sisesta 1. faili nimi, mille tweete tahad võrrelda", "Tekstide sarnasus");
-            Päring päringTekst2 = new Päring();
-            päringTekst2.kysiFailinimi("Sisesta 2. faili nimi, mille tweete tahad võrrelda", "Tekstide sarnasus");
-            ArrayList<Tweet>tweedid1=päringTekst1.loeFailist();
-            ArrayList<Tweet>tweedid2=päringTekst2.loeFailist();
+        int vastus = JOptionPane.showConfirmDialog(null,
+                "Kas tahad arvutada tekstide sarnasust (peab olema 2 salvestatud teksti)?",
+                "Tekstide sarnasus", JOptionPane.YES_OPTION);
 
+        if (vastus == JOptionPane.YES_OPTION) {
+            Päring päringTekst1 = new Päring();
+            päringTekst1.kysiFailinimi("Sisesta 1. faili nimi, mille tweete tahad võrrelda (_puhas.txt lõpuga)", "Tekstide sarnasus");
+            System.out.println(päringTekst1.getFailinimi());
+            File fa = new File(päringTekst1.getFailinimi());
+            System.out.println(fa.exists());
+            Päring päringTekst2 = new Päring();
+            päringTekst2.kysiFailinimi("Sisesta 2. faili nimi, mille tweete tahad võrrelda (_puhas.txt lõpuga)", "Tekstide sarnasus");
+            String tekst1 = päringTekst1.loePuhtastFailist();
+            String tekst2 = päringTekst2.loePuhtastFailist();
+            //        https://github.com/rrice/java-string-similarity
             SimilarityStrategy strategy = new JaroWinklerStrategy();
             StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-            String tekst1 = päringTekst1.getTekst(tweedid1);
-            String tekst2 = päringTekst2.getTekst(tweedid2);
-            double score = service.score(tekst1, tekst2);
-            System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() + " sarnasuse skoor on kasutades Jaro-Winkleri kaugust " + score);
+            DecimalFormat df = new DecimalFormat("#.###");
+            double skoorJW=service.score(tekst1, tekst2);
+            System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() +
+                    " sarnasuse skoor kasutades Jaro-Winkleri kaugust on " + df.format(skoorJW));
 //            https://github.com/tdebatty/java-string-similarity#normalized-levenshtein
             NormalizedLevenshtein l = new NormalizedLevenshtein();
             System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() +
-                    " sarnasuse skoor on kasutades normaliseeritud Levenshteini kaugust " + l.distance(tekst1, tekst2));
+                    " sarnasuse skoor kasutades normaliseeritud Levenshteini kaugust on " + df.format(l.distance(tekst1, tekst2)));
             NGram ngram = new NGram(4);
             System.out.println("Tekstide " + päringTekst1.getFailinimi() + " ja " + päringTekst2.getFailinimi() +
-                    " sarnasuse skoor on kasutades ngrami "+ngram.distance(tekst1, tekst2));
-
+                    " sarnasuse skoor kasutades ngrami on " + df.format(ngram.distance(tekst1, tekst2)));
         }
-
     }
 }
 

@@ -25,7 +25,7 @@ public class Sõnapilv {
 //        InputStream targetStream = new FileInputStream(algfail);
         InputStream inputStream = new ByteArrayInputStream(failinimi.getBytes(StandardCharsets.UTF_8));
         final List<WordFrequency> wordFrequencies = frequencyAnalyzer.load(inputStream);
-        final Dimension dimension = new Dimension(200, 200);
+        final Dimension dimension = new Dimension(250, 250);
         final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.RECTANGLE);
         wordCloud.setPadding(0);
         wordCloud.setBackground(new RectangleBackground(dimension));
