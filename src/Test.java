@@ -34,14 +34,19 @@ public class Test {
         } else {
             failistLoetud = päring.getTweedid();
         }
-        päring.salvestaPuhasTekst();
+
 
         Analüüs analüüs = new Analüüs();
         // Küsime, millised sõnad pilvest välistada, lisaks otsisõnale
         String exclude = JOptionPane.showInputDialog(null,
                 "Sisesta tühikutega eraldatud sõnad, mida soovid otsingust välistada (lisaks otsisõnale)",
                 "Välistused",
-                JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.QUESTION_MESSAGE) + " " + päring.getOtsisõna();
+
+
+
+        päring.salvestaPuhasTekst(exclude);
+
         System.out.println("Välistan analüüsist: " + exclude);
         String excludeRegex = analüüs.buildExcludeRegex(exclude);
         System.out.println("excluderegex: " + excludeRegex);

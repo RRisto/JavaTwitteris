@@ -67,7 +67,7 @@ public class Päring {
         this.failinimi = failinimi;
     }
 
-    public void salvestaPuhasTekst() throws FileNotFoundException {
+    public void salvestaPuhasTekst(String exclude) throws FileNotFoundException {
         java.io.File fail = new java.io.File(this.otsisõna+"_puhas.txt");
         //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
         java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true));
@@ -78,7 +78,8 @@ public class Päring {
         sb = analüüs.cleanText(sb, httpRegex, "");
         String punctuationRegex = "[-.,!?:]|'\\w";
         sb = analüüs.cleanText(sb, punctuationRegex, " ");
-        String stopwords = analüüs.loadStopwords();
+        String stopwords = analüüs.loadStopwords() + exclude;
+        System.out.println("Stopwords " + stopwords);
         String excludeRegex = analüüs.buildExcludeRegex(stopwords);
 
         sb = analüüs.cleanText(sb, excludeRegex, "");
