@@ -1,3 +1,5 @@
+package sample;
+
 import twitter4j.*;
 
 import javax.swing.*;
@@ -13,6 +15,23 @@ public class Päring {
     private int tweetideArv;//tweetide arv, mida kasutaja tahaks päringuga saada
     private String failinimi;
 
+    public Päring(String otsisõna, int tweetideArv) {
+        this.otsisõna = otsisõna;
+        this.tweetideArv = tweetideArv;
+
+    }
+
+    public String prindiTweedid(int nr) {
+        StringBuilder sb =new StringBuilder();
+        for (int i = 0; i < tweedid.size() |  i < nr; i++) {
+            sb.append(tweedid.get(i));
+            sb.append(" \n");
+        }
+        return sb.toString();
+    }
+
+    public Päring() {
+    }
     Twitter twitter = TwitterFactory.getSingleton();
 
     public ArrayList<Tweet> päring() {
@@ -47,7 +66,7 @@ public class Päring {
 
     public void salvestaFaili() throws Exception {
         //salvestame faili
-        java.io.File fail = new java.io.File(this.failinimi);
+        File fail = new File(this.failinimi);
         //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
         java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true)); //kirjutab faili lõppu juurde
 
@@ -68,7 +87,7 @@ public class Päring {
     }
 
     public void salvestaPuhasTekst(String exclude) throws FileNotFoundException {
-        java.io.File fail = new java.io.File(this.otsisõna+"_puhas.txt");
+        File fail = new File(this.otsisõna+"_puhas.txt");
         //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
         java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true));
         //puhastame teksti
@@ -89,7 +108,7 @@ public class Päring {
 
     public ArrayList<Tweet> loeFailist() throws FileNotFoundException {
         ArrayList<Tweet> sisseloetudtweedid =new ArrayList<>();
-        java.io.File fail = new java.io.File(this.failinimi);
+        File fail = new File(this.failinimi);
         java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
         while (sc.hasNextLine()) {
             String rida = sc.nextLine();
@@ -101,7 +120,7 @@ public class Päring {
 
     public String loePuhtastFailist() throws FileNotFoundException {
         StringBuilder sisseloetudTekst=new StringBuilder();
-        java.io.File fail = new java.io.File(this.failinimi);
+        File fail = new File(this.failinimi);
         java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
         while (sc.hasNextLine()) {
             String rida = sc.nextLine();
@@ -112,7 +131,7 @@ public class Päring {
 
     public String loePuhtastFailist(String failinimi) throws FileNotFoundException {
         StringBuilder sisseloetudTekst=new StringBuilder();
-        java.io.File fail = new java.io.File(failinimi);
+        File fail = new File(failinimi);
         java.util.Scanner sc = new java.util.Scanner(fail, "UTF-8");
         while (sc.hasNextLine()) {
             String rida = sc.nextLine();

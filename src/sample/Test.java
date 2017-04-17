@@ -1,3 +1,5 @@
+package sample;
+
 import info.debatty.java.stringsimilarity.NGram;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 import net.ricecode.similarity.JaroWinklerStrategy;
@@ -13,7 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Test {
+
     public static void main(String args[]) throws Exception {
+
+
+        //autorid Sven Kunsing ja Risto Hinno
         //NB! selleks, et tööle hakkaks tee fail twitter4j.properties ja salvesta juurkausta
         // Mida sinna panna, vaata siit: punkt 1 (via twitter4j.properties): http://twitter4j.org/en/configuration.html
         //NB! seda faili ära giti pane, see info pole avalikkusele
@@ -126,6 +132,7 @@ public class Test {
                     " sarnasuse skoor kasutades ngrami on " + df.format(ngram.distance(tekst1, tekst2)));
         }
     }
+
 }
 
 

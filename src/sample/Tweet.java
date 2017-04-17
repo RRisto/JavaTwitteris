@@ -1,3 +1,4 @@
+package sample;
 
 public class Tweet {
     private String nimi;
