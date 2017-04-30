@@ -1,18 +1,20 @@
 package sample;
 
-import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-import javax.swing.text.html.ImageView;
+import java.io.File;
+import java.io.IOException;
 
 public class Controller {
+
     @FXML
     private Label myLabel;
 
@@ -20,56 +22,54 @@ public class Controller {
     private Label olekLabel;
 
     @FXML
-    private Button myButton;
+    private Button otsiNupp;
 
     @FXML
-    private Label tweedidLabel;
+    private ListView<String> tweetideList;
 
     @FXML
     private ImageView sõnapilv;
 
+    @FXML
+    private TextField otsisõnaVäli;
+
+    @FXML
+    private TextField soovitudArvVäli;
+
 //    @FXML
-//    private void setNewText(){
-//        myLabel.setText("Pelmo "+(int)Math.round(Math.random()*100+0));
+//    private void initialize() {
+//        otsiNupp.setOnKeyPressed(event -> {
+//            if (event.getCode().equals(KeyCode.ENTER)) {
+//                System.out.println("mina");
+//                try {
+//                    setNewPäring();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 //    }
 
     @FXML
-    private TextField mytextField;
-
-    @FXML
-    private TextField mytextField2;
-
-//    @FXML
-//    private void setNewText(int arv) {
-//        olek.setText("Leidsin "+arv+" säutsu");
-//
-//    }
-
-    @FXML
-    private void setNewPäring() {
-        Päring päring=new Päring(mytextField.getCharacters().toString(), Integer.parseInt(mytextField2.getCharacters().toString()));
+    private void setNewPäring() throws IOException {
+        Päring päring = new Päring(otsisõnaVäli.getCharacters().toString(), Integer.parseInt(soovitudArvVäli.getCharacters().toString()));
         päring.päring();
-//        myLabel.setText(päring.getTekst());
-        olekLabel.setText("Leidsin "+päring.getTweetideArv()+" säutsu");
-        tweedidLabel.setText(päring.prindiTweedid(3));
 
+        if (päring.getTweetideArv() == 0) {
+            olekLabel.setText("Leidsin 0 säutsu\n proovi mõnda muud sõna või proovi hiljem uuesti");
+        } else {
+            olekLabel.setText("Leidsin " + päring.getTweetideArv() + " säutsu");
 
-    }
+            ObservableList<String> tekstList = FXCollections.observableArrayList(päring.getTekst());
+            tweetideList.setItems(tekstList);
 
-    public static class Main extends Application {
-
-        @Override
-        public void start(Stage primaryStage) throws Exception {
-            Parent root = FXMLLoader.load(getClass().getResource("sample/sample.fxml"));
-            primaryStage.setTitle("Hello World");
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-
-        }
-
-
-        public static void main(String[] args) {
-            launch(args);
+            Sõnapilv pilv = new Sõnapilv();
+            pilv.teeSõnapilv(päring.puhastaTekst(päring.getOtsisõna()));
+            File file = new File("sõnapilv.png");
+            Image image = new Image(file.toURI().toString(), 500,500, false,false);
+            sõnapilv.setImage(image);
+            sõnapilv.getImage();
         }
     }
+
 }

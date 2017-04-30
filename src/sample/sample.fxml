@@ -2,30 +2,32 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <TabPane layoutX="1.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Andmed">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="mytextField" layoutX="186.0" layoutY="77.0" promptText="Otsisõna" />
-                        <Button fx:id="myButton" layoutX="268.0" layoutY="189.0" mnemonicParsing="false" onAction="#setNewPäring" text="Otsi" />
-                        <Label fx:id="myLabel" layoutX="212.0" text="Säutsufy" textFill="#bc1818">
+                        <TextField fx:id="otsisõnaVäli" layoutX="186.0" layoutY="77.0" promptText="Otsisõna" />
+                        <Button fx:id="otsiNupp" layoutX="256.0" layoutY="189.0" mnemonicParsing="false" onAction="#setNewPäring" text="Otsi" />
+                        <Label fx:id="myLabel" layoutX="212.0" text="Säutsufy" textFill="#4139d7">
                            <font>
                               <Font size="36.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="mytextField2" layoutX="186.0" layoutY="125.0" promptText="Tweetide arv" />
-                        <Label fx:id="olekLabel" layoutX="233.0" layoutY="255.0" textFill="#a85555" />
+                        <TextField fx:id="soovitudArvVäli" layoutX="186.0" layoutY="125.0" promptText="Tweetide arv" />
+                        <Label fx:id="olekLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="212.0" layoutY="247.0" prefHeight="21.0" prefWidth="144.0" textFill="#a85555" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -33,14 +35,16 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="85.0" layoutY="48.0" />
-                        <Label fx:id="tweedidLabel" layoutX="33.0" layoutY="14.0" text="Siia tulevad säutsud" />
+                        <ListView fx:id="tweetideList" layoutX="14.0" layoutY="25.0" prefHeight="315.0" prefWidth="563.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
             <Tab text="Sõnapilv">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="sõnapilv" fitHeight="328.0" fitWidth="548.0" layoutX="27.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
