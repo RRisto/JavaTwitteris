@@ -82,9 +82,9 @@ public class Päring {
         return tweedid;
     }
 
-    public void salvestaFaili() throws Exception {
+    public void salvestaFaili(String failinimi) throws Exception {
         //salvestame faili
-        File fail = new File(this.failinimi);
+        File fail = new File(failinimi);
         //java.io.PrintWriter pw = new java.io.PrintWriter(fail, "UTF-8", true); //kirjutab faili üle
         java.io.PrintWriter pw = new java.io.PrintWriter(new FileOutputStream(fail, true)); //kirjutab faili lõppu juurde
 

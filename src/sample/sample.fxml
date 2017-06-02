@@ -1,53 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <children>
-      <TabPane layoutX="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+
+<BorderPane prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <center>
+      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab text="Andmed">
             <content>
-              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TextField fx:id="otsisõnaVäli" layoutX="186.0" layoutY="77.0" promptText="Otsisõna" />
-                        <Button fx:id="otsiNupp" layoutX="256.0" layoutY="189.0" mnemonicParsing="false" onAction="#setNewPäring" text="Otsi" />
-                        <Label fx:id="myLabel" layoutX="212.0" text="Säutsufy" textFill="#4139d7">
-                           <font>
-                              <Font size="36.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="soovitudArvVäli" layoutX="186.0" layoutY="125.0" promptText="Tweetide arv" />
-                        <Label fx:id="olekLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="212.0" layoutY="247.0" prefHeight="21.0" prefWidth="144.0" textFill="#a85555" />
-                     </children></AnchorPane>
+                  <ScrollPane>
+                     <content>
+                    <AnchorPane>
+                           <children>
+                              <VBox layoutX="50.0">
+                                 <children>
+                                    <Label fx:id="myLabel" text="Säutsufy" textFill="#4139d7">
+                                       <font>
+                                          <Font size="36.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <padding>
+                                          <Insets bottom="15.0" left="20.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="otsisõnaVäli" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" promptText="Otsisõna">
+                                       <VBox.margin>
+                                          <Insets bottom="15.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="soovitudArvVäli" maxHeight="-Infinity" maxWidth="-Infinity" promptText="Tweetide arv">
+                                       <VBox.margin>
+                                          <Insets bottom="15.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <Button fx:id="otsiNupp" mnemonicParsing="false" onAction="#setNewPäring" text="Otsi">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="60.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Label fx:id="olekLabel" alignment="CENTER" contentDisplay="CENTER" textFill="#a85555">
+                                       <VBox.margin>
+                                          <Insets left="20.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </ScrollPane>
             </content>
           </Tab>
           <Tab text="Säutsud">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="tweetideList" layoutX="14.0" layoutY="25.0" prefHeight="315.0" prefWidth="563.0" />
-                     </children></AnchorPane>
+                        <ListView fx:id="tweetideList" layoutX="14.0" layoutY="25.0" prefHeight="315.0" prefWidth="563.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="25.0" />
+                     </children>
+                  </AnchorPane>
             </content>
           </Tab>
             <Tab text="Sõnapilv">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ImageView fx:id="sõnapilv" fitHeight="328.0" fitWidth="548.0" layoutX="27.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
-                     </children></AnchorPane>
+                        <ImageView fx:id="sõnapilv" fitHeight="328.0" fitWidth="548.0" layoutX="27.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="27.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="17.0" />
+                     </children>
+                  </AnchorPane>
               </content>
             </Tab>
         </tabs>
       </TabPane>
-   </children>
-</Pane>
+   </center>
+</BorderPane>

@@ -12,6 +12,9 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.InputMismatchException;
 
 public class Controller {
 
@@ -36,40 +39,44 @@ public class Controller {
     @FXML
     private TextField soovitudArvVäli;
 
-//    @FXML
-//    private void initialize() {
-//        otsiNupp.setOnKeyPressed(event -> {
-//            if (event.getCode().equals(KeyCode.ENTER)) {
-//                System.out.println("mina");
-//                try {
-//                    setNewPäring();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
-
     @FXML
     private void setNewPäring() throws IOException {
-        Päring päring = new Päring(otsisõnaVäli.getCharacters().toString(), Integer.parseInt(soovitudArvVäli.getCharacters().toString()));
-        päring.päring();
+        Integer soovitudArv=0;
+        try {
+            soovitudArv = Integer.parseInt(soovitudArvVäli.getCharacters().toString());
+            if (soovitudArv <= 0) {
+                throw new InputMismatchException();
+            }
 
-        if (päring.getTweetideArv() == 0) {
-            olekLabel.setText("Leidsin 0 säutsu\n proovi mõnda muud sõna või proovi hiljem uuesti");
-        } else {
-            olekLabel.setText("Leidsin " + päring.getTweetideArv() + " säutsu");
+            Päring päring = new Päring(otsisõnaVäli.getCharacters().toString(), soovitudArv);
+            päring.päring();
 
-            ObservableList<String> tekstList = FXCollections.observableArrayList(päring.getTekst());
-            tweetideList.setItems(tekstList);
+            if (päring.getTweetideArv() == 0) {
+                olekLabel.setText("Leidsin 0 säutsu\nProovi mõnda muud sõna");
+            } else {
+                String ajatempel = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+                String failinimi=päring.getOtsisõna()+"_"+ajatempel+".txt";
+                try {
+                    päring.salvestaFaili(failinimi);
+                } catch (Exception e) {
+                    olekLabel.setText("Leidsin " + päring.getTweetideArv() + " säutsu, \nkuid ei suutnud faili salvestada");
+                }
+                olekLabel.setText("Leidsin " + päring.getTweetideArv() + " säutsu\nSalvestasin need faili:\n"+failinimi);
 
-            Sõnapilv pilv = new Sõnapilv();
-            pilv.teeSõnapilv(päring.puhastaTekst(päring.getOtsisõna()));
-            File file = new File("sõnapilv.png");
-            Image image = new Image(file.toURI().toString(), 500,500, false,false);
-            sõnapilv.setImage(image);
-            sõnapilv.getImage();
+                ObservableList<String> tekstList = FXCollections.observableArrayList(päring.getTekst());
+                tweetideList.setItems(tekstList);
+
+                Sõnapilv pilv = new Sõnapilv();
+                pilv.teeSõnapilv(päring.puhastaTekst(päring.getOtsisõna()));
+                File file = new File("sõnapilv.png");
+                Image image = new Image(file.toURI().toString(), 500, 500, false, false);
+                sõnapilv.setImage(image);
+                sõnapilv.getImage();
+            }
+        } catch (InputMismatchException|NumberFormatException exception) {
+            olekLabel.setText("Tweetide arv peab olema positiivne täisarv");
         }
+
     }
 
 }
