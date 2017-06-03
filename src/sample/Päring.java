@@ -56,29 +56,32 @@ public class Päring {
             }
             try { //try aitab exceptioneid kinni püüda
                 QueryResult result = twitter.search(query);
+                System.out.println("Kogusin " + result.getTweets().size() + " tweeti");
                 //tweetid sai otsa või polnud ühtegi
                 if (result.getTweets().size() == 0) {
                     break;
                 }
                 tweets.addAll(result.getTweets());
-//                System.out.println("Kogusin " + tweets.size() + " tweeti");
 
-                for (Status tweet : tweets) {
-                    //paneb vajaliku info kodukootud klassi
-                    tweedid.add(new Tweet(tweet.getUser().getScreenName(), tweet.getText(), tweet.getId()));
-                    toorTweedid.add(tweet);
+                for (Status tweet : tweets) {//otsime tweedi ID, et leida järgmise päringu max tweedi ID
                     if (tweet.getId() < lastID) lastID = tweet.getId();
                 }
             } catch (TwitterException te) { //kui twitteri poolt tuleb mingi erind, püüab kinni
                 System.out.println("Ei suutnud ühenduda: " + te);
                 erinditeArv += 1;
                 //kui 3 erindit on saanud päringus, siis pole kas netiühendust või on API limiit täis, lõpetame ära
-                if (erinditeArv>3) {
+                if (erinditeArv > 3) {
                     break;
                 }
             }
             query.setMaxId(lastID - 1);//muudab tweedi max id ära, et leida eelnevaid tweete
         }
+        for (Status tweet : tweets) {
+            //paneb vajaliku info kodukootud klassi
+            tweedid.add(new Tweet(tweet.getUser().getScreenName(), tweet.getText(), tweet.getId()));
+            toorTweedid.add(tweet);
+        }
+        System.out.println("lõplik pikkus: "+tweedid.size());
         return tweedid;
     }
 

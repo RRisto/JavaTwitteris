@@ -50,6 +50,7 @@ public class Controller {
 
             Päring päring = new Päring(otsisõnaVäli.getCharacters().toString(), soovitudArv);
             päring.päring();
+            System.out.println("sain: "+päring.getTweetideArv());
 
             if (päring.getTweetideArv() == 0) {
                 olekLabel.setText("Leidsin 0 säutsu\nProovi mõnda muud sõna");
