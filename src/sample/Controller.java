@@ -75,8 +75,10 @@ public class Controller {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
         File file = chooser.showOpenDialog(new Stage());
-        failinimi = file.getName();
-        failiNimiLabel.setText("Valitud fail: \n" + failinimi);
+        if (file.getName()!=null){
+            failinimi = file.getName();
+            failiNimiLabel.setText("Valitud fail: \n" + failinimi);
+        }
     }
 
     @FXML

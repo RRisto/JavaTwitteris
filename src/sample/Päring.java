@@ -13,13 +13,10 @@ public class Päring {
     private String otsisõna;
     private int soovitudTweetideArv;//tweetide arv, mida kasutaja tahaks päringuga saada
 
-
     public Päring(String otsisõna, int tweetideArv) {
         this.otsisõna = otsisõna;
         this.soovitudTweetideArv = tweetideArv;
-
     }
-
 
     public int getTweetideArv() {
         return tweedid.size();
